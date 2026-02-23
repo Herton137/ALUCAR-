@@ -5,7 +5,7 @@ Aplicativo para empresa de aluguel de carros para motoristas de aplicativos
 ```mermaid
 ---
 config:
-  layout: dagre
+  layout: elk
 ---
 erDiagram
 	direction TB
@@ -25,28 +25,6 @@ erDiagram
 		string status  "disponível/indisponível"  
 	}
 
-	PAGAMENTO {
-		int id PK ""  
-		date data  ""  
-		float valor  ""  
-		string forma  "dinheiro/cartão/pix"  
-	}
-
-	CLIENTE {
-		int id PK ""  
-		string nome  ""  
-		string cpf  ""  
-		string telefone  ""  
-		string email  ""  
-		int idade  ""  
-	}
-
-	Funcionario {
-		int id PK ""  
-		string nome  ""  
-		string PIS-NIT  ""  
-	}
-
 	garagem {
 		string placa PK ""  
 		string marca  ""  
@@ -54,12 +32,34 @@ erDiagram
 		int ano  ""  
 	}
 
-	ALUGUEL}o--||Funcionario:"lança informações no sistema"
-	ALUGUEL||--o{PAGAMENTO:"gera"
-	Funcionario}|--|{CLIENTE:"atendido pelo"
-	CARRO}o--|{garagem:"localiza carro na"
-	garagem}|--|{ALUGUEL:"separa carro e manda informações pro"
-	Funcionario}|--|{CARRO:"Verifica disponibilidade"
+	funcionario_cliente {
+		int cpf PK ""  
+		string nome  ""  
+		string telefone  ""  
+		string email  ""  
+		int idade  ""  
+		string PIS-NIT  ""  
+	}
 
-	classDef Pine :,stroke-width:1px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+	CLIENTE {
+		int cpf PK ""  
+		string nome  ""  
+		string telefone  ""  
+		string email  ""  
+		int idade  ""  
+	}
+
+	Funcionario {
+		int cpf PK ""  
+		string nome  ""  
+		string PIS-NIT  ""  
+	}
+
+	ALUGUEL}o--||Funcionario:"verifica"
+	Funcionario||--|{CLIENTE:"atende"
+	Funcionario}|--||garagem:"trabalha"
+	CARRO}|--||garagem:"contém"
+	CLIENTE}|--|{ALUGUEL:"assina"
+	funcionario_cliente}|--|{ALUGUEL:"assina"
+	Funcionario||--|{funcionario_cliente:"atende"
 ```
